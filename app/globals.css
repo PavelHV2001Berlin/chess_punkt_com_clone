@@ -1,4 +1,53 @@
+:root{
+  --dark-grey-bg: #262522;
+  --light-grey-bg: #302E2B;
+  --bright-chess-field: #EBECD0;
+  --green-chess-field: #779556;
+  --green-btn: #A3D160;
+  --grey-btn: #51504D;
+}
+
 *{
   margin: 0;
   padding: 0;
 }
+
+
+main{
+  width: 100%;
+  height: 100vh;
+  background-color: var(--light-grey-bg);
+}
+main > .container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 100vh;
+  margin: 0 auto;
+
+}
+main > .container .chessboard{
+  min-width: 800px;
+  min-height: 800px;
+  max-height: 90%;
+  display: grid;
+  grid-template-columns: 100px 100px 100px 100px 100px 100px 100px 100px;
+}
+.chessfield{
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chessfield.white{
+  background-color: var(--bright-chess-field);
+}
+.chessfield.dark{
+  background-color: var(--green-chess-field);
+}
+.chessfield.isActive{
+  background-color: red;
+}
+
