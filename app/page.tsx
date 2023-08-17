@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DarkBishop from '@/public/assets/chess_pieces/bishop-b.svg'
 import WhiteBishop from '@/public/assets/chess_pieces/bishop-w.svg'
 import DarkPawn from '@/public/assets/chess_pieces/pawn-b.svg'
@@ -14,75 +14,97 @@ import WhiteKing from '@/public/assets/chess_pieces/king-w.svg'
 import DarkQueen from '@/public/assets/chess_pieces/queen-b.svg'
 import WhiteQueen from '@/public/assets/chess_pieces/queen-w.svg'
 
+import Chessfield from '@/components/Chessfield';
+import Chesspiece from '@/models/chesspiece';
+import PieceColor from '@/utils/PieceColor';
+import PieceName from '@/utils/PieceName';
+import ChessfieldBlueprint from '@/models/ChessfieldBlueprint';
+import FieldColor from '@/utils/FieldColor';
 
-const Chessfield = ({ className, feldId, piece }: {className: string, feldId: number, piece: {path: string, color: string}}) => {
-  const [isActive, setIsActive] = useState(false)
-  return (<div onClick={()=>setIsActive(!isActive)} className={isActive?`chessfield isActive`:`chessfield ${className}`}>
-    {piece.path?<img src={piece.path} width={100} height={100} alt="" />:feldId}
-    
-  </div>);
-};
+
+
+
 
 const Home = () => {
   const numRows = 8; // Anzahl der Zeilen
   const numCols = 8; // Anzahl der Spalten
   let feldNummer = 0;
-  let whiteRook = {path: WhiteRook.src, color: "white"}
-  let whiteKnight = {path: WhiteKnight.src, color: "white"}
-  let whiteBishop = {path: WhiteBishop.src, color: "white"}
-  let whiteQueen = {path: WhiteQueen.src, color: "white"}
-  let whiteKing = {path: WhiteKing.src, color: "white"}
-  let whitePawn = {path: WhitePawn.src, color: "white"}
+  useEffect(()=>{
+   
+  },[])
 
-  let darkRook = {path: DarkRook.src, color: "dark"}
-  let darkKnight = {path: DarkKnight.src, color: "dark"}
-  let darkBishop = {path: DarkBishop.src, color: "dark"}
-  let darkQueen = {path: DarkQueen.src, color: "dark"}
-  let darkKing = {path: DarkKing.src, color: "dark"}
-  let darkPawn= {path: DarkPawn.src, color: "dark"}
+  const updateChessboard = (fieldBlueprint:ChessfieldBlueprint, destinationId: number)=>{
+    setChessboard(prevChessboard =>{
+      const updatedChessboard = [...prevChessboard];
 
-
-  const renderChessboard = () => {
-    const chessboard = [];
+      
+      updatedChessboard[fieldBlueprint.fieldId-1].movePiece(destinationId, updatedChessboard)
+    
+      return updatedChessboard;
+    })
+  }
+ 
+  const getDefaultChessboard = () => {
+    //single source of truth
+    const chessboard:ChessfieldBlueprint[] = [];
 
     for (let row = 0; row < numRows; row++) {
       for (let col = 0; col < numCols; col++) {
         const isDark = (row + col) % 2 === 1; // Berechnung für dunkle Felder
         feldNummer++
         let pieceSrc = ""
-        let piece = {path:"", color: ""}
-        if(feldNummer === 1 || feldNummer === 8){piece = whiteRook;}
-        if(feldNummer === 2 || feldNummer === 7){piece = whiteKnight;}
-        if(feldNummer === 3 || feldNummer === 6){piece= whiteBishop}
-        if(feldNummer === 4)                    {piece= whiteKing;}
-        if(feldNummer === 5)                    {piece= whiteQueen;}
-        if(feldNummer >= 9 && feldNummer <= 16) {piece= whitePawn;}
+        let piece: Chesspiece = new Chesspiece();
+        if(feldNummer === 1 || feldNummer === 8){piece = new Chesspiece(WhiteRook.src, PieceName.ROOK, PieceColor.WHITE, feldNummer);}
+        if(feldNummer === 2 || feldNummer === 7){piece = new Chesspiece(WhiteKnight.src, PieceName.KNIGHT, PieceColor.WHITE, feldNummer);}
+        if(feldNummer === 3 || feldNummer === 6){piece=  new Chesspiece(WhiteBishop.src, PieceName.BISHOP, PieceColor.WHITE, feldNummer)}
+        if(feldNummer === 4)                    {piece= new Chesspiece(WhiteKing.src, PieceName.KING, PieceColor.WHITE, feldNummer);}
+        if(feldNummer === 5)                    {piece= new Chesspiece(WhiteQueen.src, PieceName.QUEEN, PieceColor.WHITE, feldNummer);}
+        if(feldNummer >= 9 && feldNummer <= 16) {piece= new Chesspiece(WhitePawn.src, PieceName.PAWN, PieceColor.WHITE, feldNummer);}
         
-        if(feldNummer === 58 || feldNummer === 63){piece= darkKnight;}
-        if(feldNummer === 57 || feldNummer === 64){piece= darkRook;}
-        if(feldNummer === 59 || feldNummer === 62){piece= darkBishop;}
-        if(feldNummer === 60)                     {piece= darkKing;}
-        if(feldNummer === 61)                     {piece= darkQueen;}
-        if(feldNummer >= 49 && feldNummer <= 56)  {piece= darkPawn;}
-
-        const fieldProps = {
-          className: isDark ? 'dark' : 'white', // CSS-Klasse abhängig von Feldtyp
-          feldId: feldNummer,
-          piece: piece
-        };
+        if(feldNummer === 58 || feldNummer === 63){piece= new Chesspiece(DarkKnight.src, PieceName.KNIGHT, PieceColor.DARK, feldNummer);}
+        if(feldNummer === 57 || feldNummer === 64){piece=  new Chesspiece(DarkRook.src, PieceName.ROOK, PieceColor.DARK, feldNummer);}
+        if(feldNummer === 59 || feldNummer === 62){piece= new Chesspiece(DarkBishop.src, PieceName.BISHOP, PieceColor.DARK, feldNummer);}
+        if(feldNummer === 60)                     {piece= new Chesspiece(DarkKing.src, PieceName.KING, PieceColor.DARK, feldNummer);}
+        if(feldNummer === 61)                     {piece= new Chesspiece(DarkQueen.src, PieceName.QUEEN, PieceColor.DARK, feldNummer);}
+        if(feldNummer >= 49 && feldNummer <= 56)  {piece= new Chesspiece(DarkPawn.src, PieceName.PAWN, PieceColor.DARK);}
         
+        if(piece.path){
+          piece.fieldId = feldNummer
+        }
+      
+        
+        
+       
+        const fieldColor:FieldColor = isDark?FieldColor.DARK:FieldColor.WHITE;
+        const fieldBlueprint = new ChessfieldBlueprint(fieldColor, feldNummer, piece)
+        chessboard.push(fieldBlueprint)
+      //  setChessboard(current => [...current, fieldBlueprint])
 
-        chessboard.push(<Chessfield {...fieldProps} key={`${row}-${col}`} />);
+       // renderedChessboard.push(<Chessfield fieldBlueprint={fieldBlueprint} key={`${row}-${col}`} />);
       }
     }
 
     return chessboard;
   };
+  console.log("HUHUHU Default Chessboardstate")
+  const [chessboard, setChessboard] = useState<ChessfieldBlueprint[]>(getDefaultChessboard())//should contain all chessfield objects.
+
+  //TEST_________________
+ 
+//TEST___________________
+
+
+  console.log(chessboard)
+
 
   return (
     <main>
       <div className='container'>
-        <div className='chessboard'>{renderChessboard()}</div>
+        <div className='chessboard'>{chessboard.map((field: ChessfieldBlueprint, index: number)=>(
+          
+          <Chessfield key={index} fieldBlueprint={field} updateChessboard={updateChessboard} />
+        )
+        )}</div>
       </div>
     </main>
   );
