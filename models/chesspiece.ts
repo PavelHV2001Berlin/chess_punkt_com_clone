@@ -7,6 +7,7 @@ export default class Chesspiece{
     name: PieceName = PieceName.PAWN
     color: PieceColor = PieceColor.WHITE
     fieldId: number = 0;
+    isActivePiece: boolean = false;
     possibleDestinationFields: Array<number> = []
     constructor(path:string = "", name: PieceName = PieceName.PAWN, color: PieceColor = PieceColor.WHITE, fieldId: number = 0){
         if(path){
