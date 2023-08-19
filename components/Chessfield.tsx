@@ -3,25 +3,31 @@ import Chesspiece from '@/models/chesspiece';
 import FieldColor from '@/utils/FieldColor';
 import React, { useState } from 'react';
   
-export default function Chessfield({fieldBlueprint, updateChessboard} : {fieldBlueprint : ChessfieldBlueprint, updateChessboard: (fieldBlueprint: ChessfieldBlueprint, destinationId: number)=>void}){
+export default function Chessfield({fieldBlueprint, tryMove, setFieldActive, children} : {fieldBlueprint : ChessfieldBlueprint, tryMove: (fieldBlueprint: ChessfieldBlueprint)=>void, setFieldActive: (fieldBlueprint: ChessfieldBlueprint)=>void, children: any}){
   const hasPiece = fieldBlueprint.piece.path?true:false
-  const className = fieldBlueprint.color === FieldColor.DARK?"dark":"white"
+  let className = fieldBlueprint.color === FieldColor.DARK?"dark":"white"
   
-    const [isActive, setIsActive] = useState(false)
+    //const [isActive, setIsActive] = useState(false)
+   
     return (
     <div 
     onClick={
       ()=>{
         if(hasPiece){
-          updateChessboard(fieldBlueprint, 36)
-          console.log(fieldBlueprint.piece)
-          setIsActive(!isActive)
+         /* movePieceState(fieldBlueprint, Math.floor(Math.random()*64)+1)
+          console.log(fieldBlueprint.piece)*/
+         // fieldBlueprint.isActive = !fieldBlueprint.isActive
+         setFieldActive(fieldBlueprint);
+        }else{
+          //check if move eligible
+          tryMove(fieldBlueprint)
         }
+        console.log("fieldblueprnt");
+        console.log(fieldBlueprint);
       
       }
     }
-    className={isActive?`chessfield isActive`:`chessfield ${className}`}>
-      {fieldBlueprint.piece.path?<img src={fieldBlueprint.piece.path} width={100} height={100} alt="" />:fieldBlueprint.fieldId}
-      
+    className={ fieldBlueprint.isActive?`chessfield isActive`:`chessfield ${className}`}>
+      {children}
     </div>);
 }

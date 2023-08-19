@@ -8,6 +8,7 @@ export default class ChessfieldBlueprint{
     color: FieldColor = FieldColor.WHITE;
     fieldId: number = 0;
     piece: Chesspiece = new Chesspiece("")
+    isActive:boolean = false;
     //chessboard: Array<ChessfieldBlueprint> = []
     constructor(color: FieldColor, fieldId: number, piece: Chesspiece){
         this.color = color;
